@@ -70,6 +70,8 @@ Users define their research context (study field, main question, sub-questions, 
 - `pinecone-client` — Vector database operations  
 - `streamlit` — Web interface framework
 
+---
+
 ### Limitations
 
 - **Page Number Accuracy**: Page tracking is based on text matching and may be imprecise for PDFs with complex layouts or graphics
