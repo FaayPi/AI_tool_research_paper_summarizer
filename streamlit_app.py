@@ -11,7 +11,15 @@ import os
 sys.path.append("/Users/feepieper/Desktop/AI_project_module6")
 
 from rag_pipeline import run_rag_pipeline  
-from preprocessing_data import PINECONE_API_KEY
+
+# ---------------------------
+# Load Keys
+# ---------------------------
+try:
+    OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
+    PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
+except KeyError as e:
+    raise ValueError(f"❌ API Key fehlt in Streamlit Secrets: {e}")
 
 # ---------------------------
 # Page Configuration

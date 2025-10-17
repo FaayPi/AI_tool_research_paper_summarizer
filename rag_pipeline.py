@@ -4,7 +4,16 @@
 
 from preprocessing_data import preprocess_pdf_complete, PINECONE_API_KEY
 from summarization_chain import run_summary_chain
-from API_keys import OPENAI_API_KEY
+
+# ---------------------------
+# Load Keys
+# ---------------------------
+import streamlit as st
+try:
+    OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
+    PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
+except KeyError as e:
+    raise ValueError(f"❌ API Key fehlt in Streamlit Secrets: {e}")
 
 # ---------------------------
 # Configuration / Constants

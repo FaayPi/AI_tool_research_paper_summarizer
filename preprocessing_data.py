@@ -13,7 +13,16 @@ from langchain.docstore.document import Document
 from langchain_pinecone import PineconeVectorStore
 from langchain_openai import OpenAIEmbeddings
 from pinecone import Pinecone, ServerlessSpec
-from API_keys import OPENAI_API_KEY, PINECONE_API_KEY
+
+# ---------------------------
+# Load Keys
+# ---------------------------
+import streamlit as st
+try:
+    OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
+    PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
+except KeyError as e:
+    raise ValueError(f"❌ API Key fehlt in Streamlit Secrets: {e}")
 
 # ---------------------------
 # Configuration constants
