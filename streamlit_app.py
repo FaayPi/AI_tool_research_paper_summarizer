@@ -1,5 +1,5 @@
 # ===============================================
-# app.py - AI Research Paper Summarizer
+# streamlit_app.py - AI Research Paper Summarizer
 # ===============================================
 
 import streamlit as st
@@ -10,16 +10,9 @@ import os
 # Add project directory to path
 sys.path.append("/Users/feepieper/Desktop/AI_project_module6")
 
-from rag_pipeline import run_rag_pipeline  
-
-# ---------------------------
-# Load Keys
-# ---------------------------
-try:
-    OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
-    PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
-except KeyError as e:
-    raise ValueError(f"❌ API Key fehlt in Streamlit Secrets: {e}")
+# WICHTIG: Keine API-Keys hier laden!
+# Die werden in rag_pipeline.py lazy-loaded
+from rag_pipeline import run_rag_pipeline
 
 # ---------------------------
 # Page Configuration
@@ -228,10 +221,9 @@ with tab_home:
                     # Update progress
                     progress_bar.progress(20, text="📄 Extracting PDF text...")
                     
-                    # Run the full RAG pipeline
+                    # Run the full RAG pipeline (no pinecone_api_key passed - it's lazy-loaded)
                     summary_output = run_rag_pipeline(
                         pdf_path=tmp_pdf_path,
-                        pinecone_api_key=PINECONE_API_KEY,
                         master_inputs=st.session_state["master_inputs"],
                         paper_title=pdf_title or pdf_file.name
                     )
@@ -369,7 +361,6 @@ with tab_summaries:
                             )
                         with buttons_col:
                             if st.button("💾 Save", key=f"save_{idx}", help="Save changes", use_container_width=True):
-                                # Save the changes
                                 st.session_state["summaries"][actual_idx]["title"] = new_title
                                 st.session_state["summaries"][actual_idx]["author"] = new_author
                                 st.session_state[edit_key] = False
@@ -379,27 +370,22 @@ with tab_summaries:
                                 st.session_state[edit_key] = False
                                 st.rerun()
                     else:
-                        # DISPLAY MODE: Show as text
                         st.markdown(f"**Title:** {item.get('title', 'Untitled')}")
                         st.markdown(f"**Author:** {item.get('author', 'Unknown')}")
                 
                 with col2:
-                    # Edit and Delete buttons stacked vertically
                     if st.button("✏️ Edit", key=f"edit_btn_{idx}", help="Edit title and author", use_container_width=True):
                         st.session_state[edit_key] = True
                         st.rerun()
                     
                     if st.button("🗑️ Delete", key=f"delete_{idx}", help="Delete summary", use_container_width=True):
                         st.session_state["summaries"].pop(actual_idx)
-                        # Clean up edit mode state
                         if edit_key in st.session_state:
                             del st.session_state[edit_key]
                         st.rerun()
 
-                # Summary content
                 summary_text = item["summary"]
 
-                # Parse and display summary sections
                 if "###" in summary_text:
                     sections = summary_text.split("###")
                     for section in sections:
@@ -416,7 +402,6 @@ with tab_summaries:
                     with st.expander("📄 Full Summary", expanded=False):
                         st.markdown(summary_text)
 
-                # Download button
                 st.download_button(
                     label="Download",
                     data=summary_text,
@@ -428,7 +413,6 @@ with tab_summaries:
                 st.divider()
 
     else:
-        # Empty state
         st.info("📭 No summaries generated yet.")
         st.markdown("""
         ### 🚀 Get Started:
@@ -440,9 +424,6 @@ with tab_summaries:
         """)
 
 
-# ---------------------------
-# Sidebar (Optional Info)
-# ---------------------------
 with st.sidebar:
     st.header("ℹ️ About")
     st.markdown("""
