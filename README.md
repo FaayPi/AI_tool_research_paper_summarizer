@@ -68,7 +68,25 @@ Users define their research context (study field, main question, sub-questions, 
 - `pdfplumber` — PDF text extraction with page tracking  
 - `PyPDF2` — PDF metadata extraction  
 - `pinecone-client` — Vector database operations  
-- `streamlit` — Web interface framework  
+- `streamlit` — Web interface framework
+
+### Limitations
+
+- **Page Number Accuracy**: Page tracking is based on text matching and may be imprecise for PDFs with complex layouts or graphics
+- **Content Extraction**: Title, Author, Images, tables, and formatted content in PDFs may not be extracted correctly
+- **Language Support**: Currently optimized for English-language papers
+- **API Costs**: Uses paid OpenAI API calls; large documents or high query volumes will incur costs
+- **Context Window**: Retrieves up to 50 chunks maximum due to LLM token limits; very large papers may not be fully analyzed
+- **Namespace Isolation**: Each PDF creates a separate Pinecone namespace; cross-document retrieval is not supported
+
+### Future Improvements
+
+- **Multi-Language Support**: Add language detection and support for papers in multiple languages
+- **Advanced PDF Handling**: Implement table and figure extraction with OCR capabilities
+- **Cross-Document Analysis**: Enable comparison and synthesis across multiple papers
+- **Annotation Tools**: Allow users to highlight, annotate, and refine summaries within the UI
+- **Citation Management**: Integrate with citation managers (BibTeX, Zotero, Mendeley)
+- **Performance Optimization**: Implement caching and indexing strategies to reduce API costs
 
 ---
 
@@ -89,26 +107,3 @@ AI_project_module6/
 │   ├── 30-39.pdf
 │   └── ...
 └── README.md                                         # This file
-
-
----
-
-## Limitations
-
-- **Page Number Accuracy**: Page tracking is based on text matching and may be imprecise for PDFs with complex layouts or graphics
-- **Content Extraction**: Title, Author, Images, tables, and formatted content in PDFs may not be extracted correctly
-- **Language Support**: Currently optimized for English-language papers
-- **API Costs**: Uses paid OpenAI API calls; large documents or high query volumes will incur costs
-- **Context Window**: Retrieves up to 50 chunks maximum due to LLM token limits; very large papers may not be fully analyzed
-- **Namespace Isolation**: Each PDF creates a separate Pinecone namespace; cross-document retrieval is not supported
-
----
-
-## Future Improvements
-
-- **Multi-Language Support**: Add language detection and support for papers in multiple languages
-- **Advanced PDF Handling**: Implement table and figure extraction with OCR capabilities
-- **Cross-Document Analysis**: Enable comparison and synthesis across multiple papers
-- **Annotation Tools**: Allow users to highlight, annotate, and refine summaries within the UI
-- **Citation Management**: Integrate with citation managers (BibTeX, Zotero, Mendeley)
-- **Performance Optimization**: Implement caching and indexing strategies to reduce API costs
