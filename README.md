@@ -10,15 +10,17 @@ You can use the app directly by following this link:
 
 🔗 **Live Streamlit App:** [https://ysls2dqiutadl8td5wjnr8.streamlit.app/](https://ysls2dqiutadl8td5wjnr8.streamlit.app/)
 
-## Usage Example
+---
 
-1. Start the application and define your research framework (field of stufy, main research question, sub-questions, hypotheses)
+## 🚀 Usage Example
+
+1. Start the application and define your research framework (field of study, main research question, sub-questions, hypotheses)
 2. Upload a PDF research paper
 3. The system will:
-   - Extract and chunk the paper
-   - Create embeddings and store in Pinecone
-   - Retrieve relevant sections matching your framework
-   - Generate a structured summary with page citations
+   - Extract and chunk the paper  
+   - Create embeddings and store in Pinecone  
+   - Retrieve relevant sections matching your framework  
+   - Generate a structured summary with page citations  
 4. Download the summary or save it to your collection
 
 ---
@@ -27,12 +29,12 @@ You can use the app directly by following this link:
 
 This project implements an intelligent research paper analysis system combining:
 
-- **PDF Processing**: Extracts text and metadata from research papers with page tracking  
-- **Vector Embeddings**: Converts document chunks into semantic embeddings using OpenAI  
-- **Vector Storage**: Stores embeddings in Pinecone for efficient similarity search  
-- **RAG Pipeline**: Retrieves relevant document sections based on research questions  
-- **LLM Summarization**: Generates comprehensive summaries aligned with your research framework  
-- **Web Interface**: Streamlit-based UI for uploading PDFs and managing summaries  
+- **PDF Processing** – Extracts text and metadata from research papers with page tracking  
+- **Vector Embeddings** – Converts document chunks into semantic embeddings using OpenAI  
+- **Vector Storage** – Stores embeddings in Pinecone for efficient similarity search  
+- **RAG Pipeline** – Retrieves relevant document sections based on research questions  
+- **LLM Summarization** – Generates comprehensive summaries aligned with your research framework  
+- **Web Interface** – Streamlit-based UI for uploading PDFs and managing summaries  
 
 Users define their research context (study field, main question, sub-questions, hypotheses), and the system analyzes uploaded papers specifically against that framework — including page citations.
 
@@ -42,21 +44,21 @@ Users define their research context (study field, main question, sub-questions, 
 
 ### Language Models
 
-- **Embedding Model**: OpenAI `text-embedding-3-small`  
+- **Embedding Model:** `text-embedding-3-small` (OpenAI)  
   - Dimension: 1536  
   - Used for converting text chunks into semantic vectors  
 
-- **Summarization Model**: OpenAI `gpt-4o`  
+- **Summarization Model:** `gpt-4o` (OpenAI)  
   - Temperature: 0.3 (for consistent, focused summaries)  
   - Used for analyzing papers and generating structured summaries  
 
 ### Processing Configuration
 
-- **Chunk Size**: 800 characters  
-- **Chunk Overlap**: 100 characters  
-- **Retrieval Count (k)**: 5–10 chunks per query  
-- **Vector Database**: Pinecone (serverless, AWS region: `us-east-1`)  
-- **Similarity Metric**: Cosine distance  
+- **Chunk Size:** 800 characters  
+- **Chunk Overlap:** 100 characters  
+- **Retrieval Count (k):** 5–10 chunks per query  
+- **Vector Database:** Pinecone (serverless, AWS region: `us-east-1`)  
+- **Similarity Metric:** Cosine distance  
 
 ### Key Dependencies
 
@@ -72,6 +74,7 @@ Users define their research context (study field, main question, sub-questions, 
 
 ## 📁 File Structure
 
+```plaintext
 AI_project_module6/
 ├── streamlit_app.py                                  # Streamlit web interface
 ├── preprocessing_data.py                             # PDF processing and Pinecone upload
@@ -81,11 +84,12 @@ AI_project_module6/
 ├── requirements.txt                                  # Python package dependencies
 ├── prompt_engineering_skills.md                      # Prompt selection and notes
 ├── presentation_AI_research_paper_summarizer.pptx    # Architecture overview + QR code to app
-├── ai_env                                            # Environment details
-└── sample_research_papers/                           # Sample PDFs for testing
-   ├── 30-39.pdf
-   └── ...
+├── ai_env/                                           # Environment details
+├── sample_research_papers/                           # Sample PDFs for testing
+│   ├── 30-39.pdf
+│   └── ...
 └── README.md                                         # This file
+
 
 ---
 
