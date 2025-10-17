@@ -15,16 +15,6 @@ from langchain_openai import OpenAIEmbeddings
 from pinecone import Pinecone, ServerlessSpec
 
 # ---------------------------
-# Load Keys
-# ---------------------------
-import streamlit as st
-try:
-    OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
-    PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
-except KeyError as e:
-    raise ValueError(f"❌ API Key fehlt in Streamlit Secrets: {e}")
-
-# ---------------------------
 # Configuration constants
 # ---------------------------
 DEFAULT_INDEX_NAME = "research-papers"
@@ -32,6 +22,35 @@ CHUNK_SIZE = 800
 CHUNK_OVERLAP = 100
 TOP_K = 10
 EMBED_MODEL = "text-embedding-3-small"
+
+# ---------------------------
+# Helper function to get API keys (lazy loading)
+# ---------------------------
+def get_api_keys():
+    """
+    Load API keys from Streamlit Secrets (or environment variables as fallback).
+    This is called at runtime, not at import time.
+    """
+    try:
+        import streamlit as st
+        try:
+            openai_key = st.secrets["OPENAI_API_KEY"]
+            pinecone_key = st.secrets["PINECONE_API_KEY"]
+            return openai_key, pinecone_key
+        except KeyError:
+            # Fallback to environment variables
+            openai_key = os.getenv("OPENAI_API_KEY")
+            pinecone_key = os.getenv("PINECONE_API_KEY")
+            if not openai_key or not pinecone_key:
+                raise ValueError("API keys not found in Streamlit Secrets or environment variables")
+            return openai_key, pinecone_key
+    except ImportError:
+        # If not in Streamlit context, use environment variables
+        openai_key = os.getenv("OPENAI_API_KEY")
+        pinecone_key = os.getenv("PINECONE_API_KEY")
+        if not openai_key or not pinecone_key:
+            raise ValueError("API keys not found in environment variables")
+        return openai_key, pinecone_key
 
 # ---------------------------
 # PDF Extraction
@@ -133,9 +152,10 @@ def chunk_text_with_pages(
 # ---------------------------
 def create_embeddings_model(model_name: str = EMBED_MODEL):
     """Initialize OpenAI embeddings model."""
-    if not OPENAI_API_KEY:
+    openai_key, _ = get_api_keys()
+    if not openai_key:
         raise ValueError("OPENAI_API_KEY is missing!")
-    os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
+    os.environ["OPENAI_API_KEY"] = openai_key
     return OpenAIEmbeddings(model=model_name)
 
 # ---------------------------

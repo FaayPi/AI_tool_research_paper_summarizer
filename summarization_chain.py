@@ -11,6 +11,31 @@ from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTempla
 from langchain_core.output_parsers import StrOutputParser
 
 # ---------------------------
+# Helper function to get API keys (lazy loading)
+# ---------------------------
+def get_openai_key():
+    """
+    Load OPENAI_API_KEY from Streamlit Secrets or environment variables.
+    This is called at runtime, not at import time.
+    """
+    try:
+        import streamlit as st
+        try:
+            return st.secrets["OPENAI_API_KEY"]
+        except KeyError:
+            # Fallback to environment variables
+            key = os.getenv("OPENAI_API_KEY")
+            if not key:
+                raise ValueError("OPENAI_API_KEY not found in Streamlit Secrets or environment variables")
+            return key
+    except ImportError:
+        # If not in Streamlit context, use environment variables
+        key = os.getenv("OPENAI_API_KEY")
+        if not key:
+            raise ValueError("OPENAI_API_KEY not found in environment variables")
+        return key
+
+# ---------------------------
 # Build Summarization Chain
 # ---------------------------
 def build_summarization_chain(model_name="gpt-4o"):
@@ -73,7 +98,8 @@ Please analyze this paper according to the research framework provided in the sy
         HumanMessagePromptTemplate.from_template(human_template)
     ])
     
-    model = ChatOpenAI(model=model_name, temperature=0.3)
+    openai_key = get_openai_key()
+    model = ChatOpenAI(model=model_name, temperature=0.3, api_key=openai_key)
     parser = StrOutputParser()
     
     return prompt | model | parser

@@ -2,18 +2,8 @@
 # rag_pipeline.py - RAG Pipeline
 # ===============================================
 
-from preprocessing_data import preprocess_pdf_complete, PINECONE_API_KEY
+from preprocessing_data import preprocess_pdf_complete, get_api_keys
 from summarization_chain import run_summary_chain
-
-# ---------------------------
-# Load Keys
-# ---------------------------
-import streamlit as st
-try:
-    OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
-    PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
-except KeyError as e:
-    raise ValueError(f"❌ API Key fehlt in Streamlit Secrets: {e}")
 
 # ---------------------------
 # Configuration / Constants
@@ -78,7 +68,6 @@ class NamespacedRetriever:
 def run_rag_pipeline(
     pdf_path: str,
     master_inputs: dict,
-    pinecone_api_key: str,
     paper_title: str = "Untitled Paper",
     index_name: str = DEFAULT_INDEX_NAME,
     top_k: int = TOP_K
@@ -99,7 +88,6 @@ def run_rag_pipeline(
             - 'research_question': Main research question
             - 'hypotheses': List of hypotheses
             - 'study_field': Field of study
-        pinecone_api_key: Pinecone API key
         paper_title: Title of the paper
         index_name: Pinecone index name
         top_k: Number of chunks to retrieve per query
@@ -111,6 +99,9 @@ def run_rag_pipeline(
             - 'metadata': PDF metadata
             - 'namespace': Pinecone namespace used
     """
+    
+    # Get API keys at runtime
+    _, pinecone_api_key = get_api_keys()
     
     # Preprocess PDF
     preprocess_result = preprocess_pdf_complete(
@@ -231,7 +222,6 @@ if __name__ == "__main__":
     result = run_rag_pipeline(
         pdf_path="path/to/your/paper.pdf",
         master_inputs=sample_inputs,
-        pinecone_api_key=PINECONE_API_KEY,
         paper_title="My Research Paper"
     )
     
